@@ -8,8 +8,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
-  flex-direction: column; /* Apilar los paneles en móviles */
+  padding: 10px;
 }
 
 .left-panel, .right-panel {
@@ -17,7 +18,7 @@ body {
   flex-direction: column;
   align-items: center;
   color: black;
-  margin: 0 20px;
+  margin: 10px;
 }
 
 .center-panel {
@@ -28,99 +29,72 @@ body {
 
 .title {
   color: #5b0c0c;
-  font-size: 6vw; /* Tamaño de fuente relativo */
+  font-size: 6vw;
   margin: 10px 0;
 }
 
 .score {
-  font-size: 4vw; /* Tamaño de fuente relativo */
+  font-size: 4vw;
   font-style: italic;
   margin-bottom: 20px;
   color: black;
-  margin-top: -40px;
 }
 
 canvas {
   background: #c0c0c0;
   border: 4px solid #333;
-  width: 90%; /* Ajusta el canvas para que ocupe el 90% del contenedor */
-  max-width: 500px; /* Limitamos el ancho máximo */
-  height: auto;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 3 / 5;
 }
 
-/* Botones A-D-S */
+/* Botones A-D-S en grid */
 .controls-izq {
-  display: flex;
-  flex-direction: column;
-  gap: 5%; /* Usa un valor relativo */
-  margin-top: 5vw; /* Usamos un tamaño relativo */
-  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 10px;
+  justify-items: center;
   align-items: center;
 }
 
-.controls-izq img {
-  width: 15vw; /* Usamos un tamaño relativo para que se ajuste al tamaño de la pantalla */
-  height: 15vw; /* Usamos un tamaño relativo */
+.controls-izq img:nth-child(1) { grid-column: 1; grid-row: 2; } /* A */
+.controls-izq img:nth-child(2) { grid-column: 2; grid-row: 2; } /* S */
+.controls-izq img:nth-child(3) { grid-column: 3; grid-row: 2; } /* D */
+
+.control-btn {
+  width: 15vw;
+  height: 15vw;
+  max-width: 70px;
+  max-height: 70px;
+  cursor: pointer;
 }
 
-.controls-izq img:nth-child(1) {
-  position: absolute;
-  left: -20%;
-  top: -25%;
-}
-
-.controls-izq img:nth-child(2) {
-  position: absolute;
-  left: 15%;
-  top: -25%;
-}
-
-.controls-izq img:nth-child(3) {
-  position: absolute;
-  left: -10%;
-  top: 25%;
-}
-
-/* Botones de pausa/play/reinicio */
+/* Controles derecho */
 .controls-der {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5%;
-  margin-top: 10vw; /* Ajustamos margen superior */
+  gap: 15px;
 }
 
-.control-btn {
-  width: 15vw; /* Tamaño relativo */
-  height: 15vw; /* Tamaño relativo */
-  max-width: 70px; /* Limite de tamaño máximo */
-  max-height: 70px; /* Limite de tamaño máximo */
-  cursor: pointer;
-}
-
-/* Media Queries para pantallas más grandes */
+/* Diseño responsivo horizontal para pantallas grandes */
 @media (min-width: 768px) {
   .game-wrapper {
-    flex-direction: row; /* Los paneles se alinean horizontalmente en pantallas más grandes */
+    flex-direction: row;
   }
 
-  .controls-izq img {
-    width: 70px; /* Tamaño fijo para pantallas grandes */
-    height: 70px; /* Tamaño fijo para pantallas grandes */
-  }
-
-  .control-btn {
-    width: 70px; /* Tamaño fijo para pantallas grandes */
-    height: 70px; /* Tamaño fijo para pantallas grandes */
-  }
-}
-
-@media (min-width: 1024px) {
   .title {
-    font-size: 48px; /* Tamaño fijo para pantallas grandes */
+    font-size: 48px;
   }
 
   .score {
-    font-size: 28px; /* Tamaño fijo para pantallas grandes */
+    font-size: 28px;
+  }
+
+  .control-btn {
+    width: 70px;
+    height: 70px;
   }
 }
+
