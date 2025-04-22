@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tetris</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-wrapper">
+    <div class="left-panel">
+      <div class="score">puntos:<span id="score">0000</span></div>
+      <div class="controls-izq">
+        <img src="img/4.png" id="btnA" alt="Izquierda (A)" class="control-btn">
+        <img src="img/6.png" id="btnS" alt="Abajo (S)" class="control-btn">
+        <img src="img/5.png" id="btnD" alt="Derecha (D)" class="control-btn">
+      </div>
+    </div>
+
+    <div class="center-panel">
+      <h1 class="title">TETRIS</h1>
+      <canvas id="tetris" width="240" height="400"></canvas>
+    </div>
+
+    <div class="right-panel">
+      <div class="controls-der">
+        <img src="img/1.png" class="control-btn" id="pauseBtn">
+        <img src="img/2.png" class="control-btn" id="playBtn">
+        <img src="img/3.png" class="control-btn" id="restartBtn">
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
