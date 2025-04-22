@@ -9,7 +9,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  flex-direction: row;
+  flex-direction: column; /* Para que los paneles se apilen en pantallas más pequeñas */
 }
 
 .left-panel, .right-panel {
@@ -17,7 +17,7 @@ body {
   flex-direction: column;
   align-items: center;
   color: black;
-  margin: 0 5vw;
+  margin: 0 20px;
 }
 
 .center-panel {
@@ -28,56 +28,57 @@ body {
 
 .title {
   color: #5b0c0c;
-  font-size: 4vw;
-  margin: 1vh 0;
+  font-size: 6vw; /* Usamos un valor relativo para la fuente */
+  margin: 10px 0;
 }
 
 .score {
-  font-size: 2.5vw;
+  font-size: 4vw; /* Usamos un valor relativo */
   font-style: italic;
-  margin-bottom: 3vh;
+  margin-bottom: 20px;
   color: black;
-  margin-top: -4vh;
-  text-align: center;
+  margin-top: -40px;
 }
 
 canvas {
   background: #c0c0c0;
-  border: 0.4vw solid #333;
-  width: 80vw;
-  max-width: 300px;
+  border: 4px solid #333;
+  width: 90%; /* Ajustamos el ancho al 90% de su contenedor */
+  max-width: 500px; /* Limite máximo de ancho */
   height: auto;
-  aspect-ratio: 3 / 5;
 }
 
 /* Botones A-D-S */
 .controls-izq {
   display: flex;
   flex-direction: column;
+  gap: 5%;
+  margin-top: 3vw;
   position: relative;
-  margin-top: 3vh;
+  align-items: center; /* Alineamos los botones al centro */
 }
 
 .controls-izq img {
-  width: 12vw;
-  max-width: 70px;
-  height: auto;
+  width: 15vw; /* Usamos un tamaño relativo */
+  height: 15vw; /* Usamos un tamaño relativo */
 }
 
 .controls-izq img:nth-child(1) {
   position: absolute;
-  left: -20vw;
-  top: -3vh;
+  left: -20%;
+  top: -25%;
 }
+
 .controls-izq img:nth-child(2) {
   position: absolute;
-  left: 5vw;
-  top: -3vh;
+  left: 15%;
+  top: -25%;
 }
+
 .controls-izq img:nth-child(3) {
   position: absolute;
-  left: -7vw;
-  top: 5vh;
+  left: -10%;
+  top: 25%;
 }
 
 /* Botones de pausa/play/reinicio */
@@ -85,48 +86,41 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh;
-  margin-top: 6vh;
+  gap: 5%;
+  margin-top: 10vw;
 }
 
 .control-btn {
-  width: 12vw;
-  max-width: 70px;
-  height: auto;
+  width: 15vw; /* Tamaño relativo */
+  height: 15vw; /* Tamaño relativo */
+  max-width: 70px; /* Limite máximo de tamaño */
+  max-height: 70px; /* Limite máximo de tamaño */
   cursor: pointer;
 }
 
-/* 🟢 Ajustes para móviles */
-@media (max-width: 768px) {
+/* Media Queries para pantallas más grandes */
+@media (min-width: 768px) {
   .game-wrapper {
-    flex-direction: column;
+    flex-direction: row; /* Los paneles se alinean horizontalmente en pantallas más grandes */
   }
 
-  .left-panel, .right-panel {
-    flex-direction: row;
-    margin: 2vh 0;
+  .controls-izq img {
+    width: 70px; /* Tamaño fijo para pantallas grandes */
+    height: 70px; /* Tamaño fijo para pantallas grandes */
   }
 
-  .controls-izq {
-    position: static;
-    flex-direction: row;
-    gap: 3vw;
-  }
-
-  .controls-izq img,
   .control-btn {
-    width: 18vw;
+    width: 70px; /* Tamaño fijo para pantallas grandes */
+    height: 70px; /* Tamaño fijo para pantallas grandes */
   }
+}
 
-  canvas {
-    width: 90vw;
+@media (min-width: 1024px) {
+  .title {
+    font-size: 48px; /* Tamaño fijo para pantallas grandes */
   }
 
   .score {
-    font-size: 4vw;
-  }
-
-  .title {
-    font-size: 6vw;
+    font-size: 28px; /* Tamaño fijo para pantallas grandes */
   }
 }
