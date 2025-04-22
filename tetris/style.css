@@ -6,19 +6,41 @@ body {
 
 .game-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
   height: 100vh;
   padding: 10px;
+  box-sizing: border-box;
 }
 
-.left-panel, .right-panel {
+.left-panel,
+.right-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: black;
   margin: 10px;
+  color: black;
+}
+
+/* Mueve los controles abajo en pantallas pequeñas */
+.controls-izq {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5vw;
+  margin-top: 20px;
+}
+
+/* Estilo de los botones A, S, D */
+.controls-izq img {
+  width: 15vw;
+  height: 15vw;
+  max-width: 60px;
+  max-height: 60px;
+}
+
+.control-btn {
+  cursor: pointer;
 }
 
 .center-panel {
@@ -36,8 +58,7 @@ body {
 .score {
   font-size: 4vw;
   font-style: italic;
-  margin-bottom: 20px;
-  color: black;
+  margin-bottom: 10px;
 }
 
 canvas {
@@ -48,40 +69,44 @@ canvas {
   aspect-ratio: 3 / 5;
 }
 
-/* Botones A-D-S en grid */
-.controls-izq {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: 10px;
-  justify-items: center;
-  align-items: center;
-}
-
-.controls-izq img:nth-child(1) { grid-column: 1; grid-row: 2; } /* A */
-.controls-izq img:nth-child(2) { grid-column: 2; grid-row: 2; } /* S */
-.controls-izq img:nth-child(3) { grid-column: 3; grid-row: 2; } /* D */
-
-.control-btn {
-  width: 15vw;
-  height: 15vw;
-  max-width: 70px;
-  max-height: 70px;
-  cursor: pointer;
-}
-
 /* Controles derecho */
 .controls-der {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  margin-top: 20px;
 }
 
-/* Diseño responsivo horizontal para pantallas grandes */
+.controls-der img {
+  width: 15vw;
+  height: 15vw;
+  max-width: 60px;
+  max-height: 60px;
+}
+
+/* Pantallas grandes (horizontal layout) */
 @media (min-width: 768px) {
   .game-wrapper {
     flex-direction: row;
+    justify-content: center;
+  }
+
+  .controls-izq {
+    flex-direction: column;
+    margin-top: 40px;
+    gap: 20px;
+  }
+
+  .controls-der {
+    margin-top: 40px;
+  }
+
+  .control-btn,
+  .controls-izq img,
+  .controls-der img {
+    width: 70px;
+    height: 70px;
   }
 
   .title {
@@ -91,10 +116,4 @@ canvas {
   .score {
     font-size: 28px;
   }
-
-  .control-btn {
-    width: 70px;
-    height: 70px;
-  }
 }
-
