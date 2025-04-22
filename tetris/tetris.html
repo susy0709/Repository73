@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tetris</title>
+  <style>
+    body {
+      background-color: #444;
+      color: black;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    #game {
+      background: #cbd5e1;
+      width: 240px;
+      height: 400px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(10, 24px);
+      grid-template-rows: repeat(20, 20px);
+      border: 4px solid #333;
+    }
+    .cell {
+      width: 24px;
+      height: 20px;
+      border: 1px solid #444;
+    }
+    .filled {
+      background-color: red;
+    }
+    .I { background-color: cyan; }
+    .J { background-color: blue; }
+    .L { background-color: orange; }
+    .O { background-color: yellow; }
+    .S { background-color: limegreen; }
+    .T { background-color: purple; }
+    .Z { background-color: red; }
+    
+    .controls {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #000;
+      color: #ccc;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #score {
+      font-size: 24px;
+      font-weight: bold;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: maroon">TETRIS</h1>
+  <div id="score">puntos: 0000</div>
+  <div id="game"></div>
+  <div class="controls">
+    <div class="button" onclick="move('left')">A</div>
+    <div class="button" onclick="move('down')">S</div>
+    <div class="button" onclick="move('right')">D</div>
+    <div class="button" onclick="pauseGame()">
+      <img src="pausa.png" alt="pausa" style="width:30px">
+    </div>
+    <div class="button" onclick="playGame()">
+      ▶
+    </div>
+    <div class="button" onclick="resetGame()">
+      ↻
+    </div>
+  </div>
+  <script>
+    const ROWS = 20;
+    const COLS = 10;
+    const TETROMINOES = {
+      I: [[1, 1, 1, 1]],
+      J: [[1, 0, 0], [1, 1, 1]],
+      L: [[0, 0, 1], [1, 1, 1]],
+      O: [[1, 1], [1, 1]],
+      S: [[0, 1, 1], [1, 1, 0]],
+      T: [[0, 1, 0], [1, 1, 1]],
+      Z: [[1, 1, 0], [0, 1, 1]]
+    };
+    const COLORS = ["I", "J", "L", "O", "S", "T", "Z"];
+    const game = document.getElementById('game');
+    const scoreDisplay = document.getElementById('score');
+    let board = [];
+    let current;
+    let interval;
+    let score = 0;
+    let paused = false;
+
+    function createBoard() {
+      board = [];
+      game.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        board[r] = [];
+        for (let c = 0; c < COLS; c++) {
+          let cell = document.createElement('div');
+          cell.className = 'cell';
+          game.appendChild(cell);
+          board[r][c] = cell;
+        }
+      }
+    }
+
+    function drawMatrix(matrix, offset, color) {
+      matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value) {
+            let idx = (offset.y + y) * COLS + (offset.x + x);
+            if (board[offset.y + y] && board[offset.y + y][offset.x + x]) {
+              board[offset.y + y][offset.x + x].className = `cell filled ${color}`;
+            }
+          }
+        });
+      });
+    }
+
+    function collide(matrix, offset) {
+      for (let y = 0; y < matrix.length; ++y) {
+        for (let x = 0; x < matrix[y].length; ++x) {
+          if (matrix[y][x] &&
+              (board[offset.y + y] === undefined ||
+              board[offset.y + y][offset.x + x] === undefined ||
+              board[offset.y + y][offset.x + x].classList.contains('filled')))
+            return true;
+        }
+      }
+      return false;
+    }
+
+    function merge(matrix, offset, color) {
+      matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value && board[offset.y + y][offset.x + x]) {
+            board[offset.y + y][offset.x + x].classList.add('filled', color);
+          }
+        });
+      });
+    }
+
+    function clearLines() {
+      outer: for (let y = ROWS - 1; y >= 0; y--) {
+        if (board[y].every(cell => cell.classList.contains('filled'))) {
+          board[y].forEach(cell => cell.className = 'cell');
+          for (let row = y; row > 0; row--) {
+            for (let col = 0; col < COLS; col++) {
+              board[row][col].className = board[row - 1][col].className;
+            }
+          }
+          for (let col = 0; col < COLS; col++) {
+            board[0][col].className = 'cell';
+          }
+          y++;
+          score += 10;
+          scoreDisplay.innerText = `puntos: ${score.toString().padStart(4, '0')}`;
+        }
+      }
+    }
+
+    function spawn() {
+      let shape = COLORS[Math.floor(Math.random() * COLORS.length)];
+      current = {
+        matrix: TETROMINOES[shape],
+        pos: {x: 3, y: 0},
+        color: shape
+      };
+      if (collide(current.matrix, current.pos)) {
+        alert('Game Over');
+        resetGame();
+      }
+    }
+
+    function drop() {
+      current.pos.y++;
+      if (collide(current.matrix, current.pos)) {
+        current.pos.y--;
+        merge(current.matrix, current.pos, current.color);
+        clearLines();
+        spawn();
+      }
+      draw();
+    }
+
+    function draw() {
+      createBoard();
+      drawMatrix(current.matrix, current.pos, current.color);
+    }
+
+    function move(dir) {
+      if (paused) return;
+      if (dir === 'left') current.pos.x--;
+      if (dir === 'right') current.pos.x++;
+      if (dir === 'down') drop();
+      if (collide(current.matrix, current.pos)) {
+        if (dir === 'left') current.pos.x++;
+        if (dir === 'right') current.pos.x--;
+      }
+      draw();
+    }
+
+    function pauseGame() {
+      clearInterval(interval);
+      paused = true;
+    }
+
+    function playGame() {
+      if (!paused) return;
+      interval = setInterval(drop, 1000);
+      paused = false;
+    }
+
+    function resetGame() {
+      clearInterval(interval);
+      score = 0;
+      paused = false;
+      scoreDisplay.innerText = 'puntos: 0000';
+      createBoard();
+      spawn();
+      interval = setInterval(drop, 1000);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'a') move('left');
+      else if (e.key === 'd') move('right');
+      else if (e.key === 's') move('down');
+    });
+
+    resetGame();
+  </script>
+</body>
+</html>
